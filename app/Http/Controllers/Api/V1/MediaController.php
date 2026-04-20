@@ -33,19 +33,11 @@ class MediaController extends Controller
         $slug = \Illuminate\Support\Str::slug($name);
         $filename = $slug . '-' . time() . '.webp';
 
-        // Process and convert to WebP
-        $image = $this->manager->read($file->getPathname());
-        
-        // Resize if > 1920px
-        if ($image->width() > 1920) {
-            $image->resize(1920, null, function ($constraint) {
-                $constraint->aspectRatio();
-            });
-        }
+        $image = $this->manager->decode($file->getPathname());
+        $image->scaleDown(width: 1920);
 
-        // Save as WebP
         $path = "{$type}/{$filename}";
-        Storage::disk('public')->put($path, $image->toWebp(85));
+        Storage::disk('public')->put($path, $image->toWebp(quality: 85));
 
         return response()->json([
             'data' => [
