@@ -9,58 +9,75 @@ All responses are JSON `{ "data": ... }`.
 **Flow**: POST `/auth/login` → receive `token` → send as `Authorization: Bearer <token>` on protected routes.
 Token has no expiry. Revoke with POST `/auth/logout`.
 
-## Capabilities
+## Endpoints
 
-### Read (no auth required)
-| What | Endpoint |
-|------|----------|
-| Site settings + bio + avatar_url | GET /site |
-| Albums list (with tracks) | GET /albums |
-| Single album (with tracks) | GET /albums/{id} or GET /albums/{slug} |
-| Tracks list | GET /tracks |
-| Single track | GET /tracks/{id} |
-| Social links | GET /links |
-| Single link | GET /links/{id} |
-| News updates | GET /updates |
-| Single update | GET /updates/{id} |
+### Public (no auth)
 
-Query params: `?all=1` returns hidden/inactive items too — **requires Bearer token**. `?per_page=N` paginates albums/updates (max 100). `?album_id=N` filters tracks.
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /site | Site settings + bio + avatar_url |
+| GET | /albums | Albums list with tracks — `?per_page=N` (max 100), `?all=1`* |
+| GET | /albums/{id_or_slug} | Single album with tracks — accepts numeric ID or slug |
+| GET | /tracks | Tracks list — `?album_id=N`, `?all=1`* |
+| GET | /tracks/{id} | Single track |
+| GET | /links | Social links — `?all=1`* |
+| GET | /links/{id} | Single link |
+| GET | /updates | News updates — `?per_page=N` (max 100), `?all=1`* |
+| GET | /updates/{id} | Single update |
 
-> GET routes are public for active/visible content. `?all=1` requires a valid Bearer token.
+> \* `?all=1` includes inactive/hidden items — **requires Bearer token**.
 
-### Write (Bearer token required)
+### Protected (Bearer token required)
 
-**Albums** — `POST /albums` (multipart), `PUT /albums/{id}` (multipart), `DELETE /albums/{id}`
-Required on create: `title` (string), `year` (int 2000-2100), `platform` (youtube|soundcloud|bandcamp|spotify)
-Optional: `media_url`, `description`, `cover` (image file → auto-converted to WebP), `sort` (int), `active` (bool)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /auth/logout | Revoke current token |
+| GET | /settings | All site settings |
+| PATCH | /settings | Partial update settings |
+| PATCH | /bio | Update bio only — body: `{ "value": "..." }` |
+| POST | /albums | Create album (multipart) |
+| PUT | /albums/{id} | Update album (multipart) |
+| DELETE | /albums/{id} | Delete album |
+| POST | /tracks | Create track (JSON) |
+| PUT | /tracks/{id} | Update track (JSON) |
+| DELETE | /tracks/{id} | Delete track |
+| POST | /links | Create social link (JSON) |
+| PUT | /links/{id} | Update link (JSON) |
+| DELETE | /links/{id} | Delete link |
+| POST | /updates | Create news update (JSON) |
+| PUT | /updates/{id} | Update news update (JSON) |
+| DELETE | /updates/{id} | Delete news update |
+| POST | /media/upload | Upload image (multipart) — `file` + `type` (covers\|avatars\|og) |
+| DELETE | /media/{filename} | Delete media file — encode `/` as `%2F` |
 
-**Tracks** — `POST /tracks` (JSON), `PUT /tracks/{id}` (JSON), `DELETE /tracks/{id}`
+## Field reference
+
+**Albums** (POST/PUT multipart)
+Required on create: `title` (string), `year` (int 2000–2100), `platform` (youtube|soundcloud|bandcamp|spotify)
+Optional: `media_url`, `description`, `cover` (image → auto-converted to WebP), `sort` (int), `active` (bool)
+
+**Tracks** (POST/PUT JSON)
 Required on create: `album_id`, `title`, `platform`
 Optional: `media_url`, `duration` (e.g. "3:42"), `sort`, `active`
 
-**Social Links** — `POST /links` (JSON), `PUT /links/{id}` (JSON), `DELETE /links/{id}`
+**Social Links** (POST/PUT JSON)
 Required on create: `platform`, `label`, `url` (any scheme: https, mailto, tg, etc.)
 Optional: `icon_svg` (SVG string, max 5000 chars — script tags stripped), `sort`, `active`
 
-**News Updates** — `POST /updates` (JSON), `PUT /updates/{id}` (JSON), `DELETE /updates/{id}`
+**News Updates** (POST/PUT JSON)
 Required on create: `body` (max 2000 chars)
 Optional: `visible` (bool, default true), `published_at` (ISO8601)
 
-**Site Settings** — `GET /settings` → returns all settings fields
-`PATCH /settings` (JSON) — partial update any combination of:
-`site_name`, `tagline`, `subtitle`, `bio`, `avatar_path`, `meta_description`, `meta_keywords`, `og_image_path`
+**Settings** (PATCH JSON)
+Fields: `site_name`, `tagline`, `subtitle`, `bio`, `avatar_path`, `meta_description`, `meta_keywords`, `og_image_path`
 
-**Bio only shortcut** — `PATCH /bio` (JSON) — body: `{ "value": "..." }`
-
-**Media** — `POST /media/upload` (multipart): fields `file` (image, max 4MB) + `type` (covers|avatars|og)
-→ returns `{ "data": { "path": "covers/slug-ts.webp", "url": "https://..." } }`
-`DELETE /media/{filename}` — filename = relative path (e.g. `covers/my-album-123.webp`)
+**Media upload** response: `{ "data": { "path": "covers/slug-ts.webp", "url": "https://..." } }`
 
 ## Typical task flows
 
 ### Publish a new album
 1. POST `/media/upload` with cover image + `type=covers` → get `path`
-2. POST `/albums` with `title`, `year`, `platform`, `media_url`, `cover` (or use path from step 1)
+2. POST `/albums` with `title`, `year`, `platform`, `media_url`, `cover`
 
 ### Update site bio
 `PATCH /bio` body `{ "value": "New bio text..." }`
