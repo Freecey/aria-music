@@ -21,9 +21,12 @@ class AlbumController extends Controller
     public function index(Request $request): JsonResponse
     {
         $perPage = min($request->integer('per_page', 20), 100);
-        $showAll = $request->boolean('all') && auth('sanctum')->check();
 
-        if ($showAll) {
+        if ($request->boolean('all')) {
+            if (!auth('sanctum')->check()) {
+                return response()->json(['message' => 'Unauthenticated.'], 401);
+            }
+
             $albums = Album::with('tracks')
                 ->orderBy('sort')
                 ->get()
