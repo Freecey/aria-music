@@ -1,2 +1,20 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Disallow admin
+Disallow: /admin/
+
+# Disallow API
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://aria-music.be/sitemap.xml
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
