@@ -12,6 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->redirectGuestsTo(fn () => route('admin.login'));
         $middleware->alias([
             'log.api' => \App\Http\Middleware\LogApiRequest::class,
             'role' => \App\Http\Middleware\EnsureUserRole::class,

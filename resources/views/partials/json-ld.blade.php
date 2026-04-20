@@ -2,17 +2,17 @@
 {{-- MusicGroup + MusicAlbum schemas --}}
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@graph": [
+  "@@context": "https://schema.org",
+  "@@graph": [
     {
-      "@type": "MusicGroup",
-      "@id": "https://aria-music.be/#organization",
+      "@@type": "MusicGroup",
+      "@@id": "https://aria-music.be/#organization",
       "name": "{{ $site_name ?? 'Aria' }}",
       "alternateName": "Aria",
       "description": "{{ $bio ?? '' }}",
       "url": "https://aria-music.be",
       "logo": {
-        "@type": "ImageObject",
+        "@@type": "ImageObject",
         "url": "{{ $avatar_url ?? '' }}"
       },
       "sameAs": [
@@ -22,29 +22,29 @@
       ],
       "genre": "{{ $subtitle ?? 'Musique Électronique' }}",
       "contactPoint": {
-        "@type": "ContactPoint",
+        "@@type": "ContactPoint",
         "email": "aria@aria-music.be",
         "contactType": "Customer Service"
       }
     },
     {
-      "@type": "WebSite",
-      "@id": "https://aria-music.be/#website",
+      "@@type": "WebSite",
+      "@@id": "https://aria-music.be/#website",
       "url": "https://aria-music.be",
       "name": "{{ $site_name ?? 'Aria' }}",
-      "publisher": { "@id": "https://aria-music.be/#organization" },
+      "publisher": { "@@id": "https://aria-music.be/#organization" },
       "potentialAction": {
-        "@type": "SearchAction",
+        "@@type": "SearchAction",
         "target": "https://aria-music.be/?q={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     },
     {
-      "@type": "BreadcrumbList",
-      "@id": "https://aria-music.be/#breadcrumb",
+      "@@type": "BreadcrumbList",
+      "@@id": "https://aria-music.be/#breadcrumb",
       "itemListElement": [
         {
-          "@type": "ListItem",
+          "@@type": "ListItem",
           "position": 1,
           "name": "Accueil",
           "item": "https://aria-music.be"
@@ -53,10 +53,10 @@
     }
     @foreach($albums ?? [] as $album)
     ,{
-      "@type": "MusicAlbum",
-      "@id": "https://aria-music.be/#album-{{ $album->id }}",
+      "@@type": "MusicAlbum",
+      "@@id": "https://aria-music.be/#album-{{ $album->id }}",
       "name": "{{ $album->title }}",
-      "byArtist": { "@id": "https://aria-music.be/#organization" },
+      "byArtist": { "@@id": "https://aria-music.be/#organization" },
       "datePublished": "{{ $album->year }}",
       "description": "{{ $album->description ?? '' }}",
       "image": "{{ $album->cover_url ?? '' }}",
@@ -64,7 +64,7 @@
       "track": [
         @foreach($album->tracks ?? [] as $track)
         {
-          "@type": "MusicTrack",
+          "@@type": "MusicTrack",
           "name": "{{ $track->title }}",
           "duration": "{{ $track->duration ?? '' }}",
           "url": "{{ $track->media_url ?? '' }}"
