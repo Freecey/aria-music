@@ -18,7 +18,7 @@ class LogApiRequest
             ApiLog::create([
                 'method' => $request->method(),
                 'endpoint' => $request->path(),
-                'payload' => $request->except(['password', 'token', 'secret', 'api_key', 'api_secret', 'access_token', 'refresh_token']),
+                'payload' => json_encode($request->except(['password', 'token', 'secret', 'api_key', 'api_secret', 'access_token', 'refresh_token'])),
                 'ip' => $request->ip(),
                 'user_id' => $request->user()->id,
                 'status_code' => $response->getStatusCode(),
