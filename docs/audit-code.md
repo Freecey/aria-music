@@ -244,11 +244,23 @@ Vérifier que les fonts sont bien servies localement (dans `public/fonts/` aprè
 
 | Étape | Status |
 |-------|--------|
-| Commits poussés sur `dev` | ✅ `15c6e87`, `049c35e`, `c920fb2` |
-| Push `dev` vers GitHub | ✅ `c920fb2` |
+| Commits poussés sur `dev` | ✅ `15c6e87`, `049c35e`, `c920fb2`, `e8b4960` |
+| Push `dev` vers GitHub | ✅ `c920fb2` → `e8b4960` (hero avatar Aria) |
+| Avatar Aria uploadé dans `storage/app/public/avatars/` | ✅ `aria_portrait.png` |
 | Mail envoyé à Aria pour review | ✅ Envoyé lun. 20 avr. 2026 |
+| Aria a répondu — Go design confirmé | ✅ ✓ OK pour le design — Message #7 |
 
-**Prochaine étape :** Déployer sur production après validation Aria.
+---
+
+## 🎨 Design Hero — Commit `e8b4960`
+
+**Implémenté:**
+- Avatar Aria dans le hero section (avatar circulaire avec glow violet animé)
+- Ring orbital animé autour de l'avatar
+- Import `variables.css` dans vite build
+- Avatar path: `avatars/aria_portrait.png` dans SettingsSeeder
+
+**Prochaine étape :** Déployer prod + Aria teste le rendu visuel
 
 ---
 
