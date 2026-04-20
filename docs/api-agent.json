@@ -1,0 +1,259 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Aria Music API",
+    "description": "API REST v1 for aria-music.be — manages albums, tracks, social links, news updates, site settings, and media.",
+    "version": "1.0.0",
+    "contact": {"email": "aria@aria-music.be"}
+  },
+  "servers": [
+    {"url": "https://aria-music.be/api/v1", "description": "Production"},
+    {"url": "http://localhost/api/v1", "description": "Development"}
+  ],
+  "tags": [
+    {"name": "Auth", "description": "Authentication endpoints"},
+    {"name": "Site", "description": "Site settings"},
+    {"name": "Albums", "description": "Album management"},
+    {"name": "Tracks", "description": "Track management"},
+    {"name": "Links", "description": "Social links"},
+    {"name": "Updates", "description": "News/updates"},
+    {"name": "Media", "description": "Media upload"}
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"], "operationId": "login", "summary": "Login admin",
+        "requestBody": {
+          "required": true,
+          "content": {"application/x-www-form-urlencoded": {
+            "schema": {"type": "object", "required": ["email", "password"], "properties": {
+              "email": {"type": "string", "example": "aria@aria-music.be"},
+              "password": {"type": "string", "example": "aria-secret-2026"}
+            }}
+          }}
+        },
+        "responses": {"200": {"description": "Login success"}}
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["Auth"], "operationId": "logout", "summary": "Logout",
+        "security": [{"BearerAuth": []}],
+        "responses": {"200": {"description": "Logged out"}}
+      }
+    },
+    "/site": {
+      "get": {
+        "tags": ["Site"], "operationId": "getSite", "summary": "Get site settings",
+        "responses": {"200": {"description": "Site settings"}}
+      }
+    },
+    "/albums": {
+      "get": {
+        "tags": ["Albums"], "operationId": "listAlbums", "summary": "List albums",
+        "parameters": [{"name": "all", "in": "query", "schema": {"type": "integer"}}],
+        "responses": {"200": {"description": "Album list"}}
+      },
+      "post": {
+        "tags": ["Albums"], "operationId": "createAlbum", "summary": "Create album",
+        "security": [{"BearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {"multipart/form-data": {
+            "schema": {"$ref": "#/components/schemas/AlbumCreate"}
+          }}
+        },
+        "responses": {"201": {"description": "Album created"}, "401": {"description": "Unauthorized"}, "422": {"description": "Validation error"}}
+      }
+    },
+    "/albums/{id}": {
+      "put": {
+        "tags": ["Albums"], "operationId": "updateAlbum", "summary": "Update album",
+        "security": [{"BearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}}],
+        "requestBody": {"content": {"multipart/form-data": {"schema": {"$ref": "#/components/schemas/AlbumUpdate"}}}},
+        "responses": {"200": {"description": "Album updated"}}
+      },
+      "delete": {
+        "tags": ["Albums"], "operationId": "deleteAlbum", "summary": "Delete album",
+        "security": [{"BearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}}],
+        "responses": {"200": {"description": "Album deleted"}}
+      }
+    },
+    "/tracks": {
+      "get": {
+        "tags": ["Tracks"], "operationId": "listTracks", "summary": "List tracks",
+        "parameters": [{"name": "album_id", "in": "query", "schema": {"type": "integer"}}],
+        "responses": {"200": {"description": "Track list"}}
+      },
+      "post": {
+        "tags": ["Tracks"], "operationId": "createTrack", "summary": "Create track",
+        "security": [{"BearerAuth": []}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/TrackCreate"}}}},
+        "responses": {"201": {"description": "Track created"}}
+      }
+    },
+    "/tracks/{id}": {
+      "put": {
+        "tags": ["Tracks"], "operationId": "updateTrack", "summary": "Update track",
+        "security": [{"BearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}}],
+        "responses": {"200": {"description": "Track updated"}}
+      },
+      "delete": {
+        "tags": ["Tracks"], "operationId": "deleteTrack", "summary": "Delete track",
+        "security": [{"BearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}}],
+        "responses": {"200": {"description": "Track deleted"}}
+      }
+    },
+    "/links": {
+      "get": {
+        "tags": ["Links"], "operationId": "listLinks", "summary": "List social links",
+        "responses": {"200": {"description": "Links list"}}
+      },
+      "post": {
+        "tags": ["Links"], "operationId": "createLink", "summary": "Create social link",
+        "security": [{"BearerAuth": []}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/LinkCreate"}}}},
+        "responses": {"201": {"description": "Link created"}}
+      }
+    },
+    "/links/{id}": {
+      "put": {
+        "tags": ["Links"], "operationId": "updateLink", "summary": "Update link",
+        "security": [{"BearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}}],
+        "responses": {"200": {"description": "Link updated"}}
+      },
+      "delete": {
+        "tags": ["Links"], "operationId": "deleteLink", "summary": "Delete link",
+        "security": [{"BearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}}],
+        "responses": {"200": {"description": "Link deleted"}}
+      }
+    },
+    "/updates": {
+      "get": {
+        "tags": ["Updates"], "operationId": "listUpdates", "summary": "List visible updates",
+        "responses": {"200": {"description": "Updates list"}}
+      },
+      "post": {
+        "tags": ["Updates"], "operationId": "createUpdate", "summary": "Create update",
+        "security": [{"BearerAuth": []}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/UpdateCreate"}}}},
+        "responses": {"201": {"description": "Update created"}}
+      }
+    },
+    "/updates/{id}": {
+      "put": {
+        "tags": ["Updates"], "operationId": "updateUpdate", "summary": "Update news item",
+        "security": [{"BearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}}],
+        "responses": {"200": {"description": "Update modified"}}
+      },
+      "delete": {
+        "tags": ["Updates"], "operationId": "deleteUpdate", "summary": "Delete update",
+        "security": [{"BearerAuth": []}],
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}}],
+        "responses": {"200": {"description": "Update deleted"}}
+      }
+    },
+    "/bio": {
+      "patch": {
+        "tags": ["Site"], "operationId": "patchBio", "summary": "Update bio",
+        "security": [{"BearerAuth": []}],
+        "requestBody": {"required": true, "content": {"application/json": {
+          "schema": {"type": "object", "properties": {"value": {"type": "string"}}, "required": ["value"]}
+        }}},
+        "responses": {"200": {"description": "Bio updated"}}
+      }
+    },
+    "/settings": {
+      "patch": {
+        "tags": ["Site"], "operationId": "patchSettings", "summary": "Update multiple settings",
+        "security": [{"BearerAuth": []}],
+        "requestBody": {"required": true, "content": {"application/json": {
+          "schema": {"type": "object", "properties": {
+            "site_name": {"type": "string"},
+            "tagline": {"type": "string"},
+            "subtitle": {"type": "string"}
+          }}
+        }}},
+        "responses": {"200": {"description": "Settings updated"}}
+      }
+    },
+    "/media/upload": {
+      "post": {
+        "tags": ["Media"], "operationId": "uploadMedia", "summary": "Upload image",
+        "security": [{"BearerAuth": []}],
+        "requestBody": {"required": true, "content": {"multipart/form-data": {
+          "schema": {"type": "object", "properties": {
+            "file": {"type": "string", "format": "binary"},
+            "folder": {"type": "string", "enum": ["covers", "avatars", "og"]}
+          }, "required": ["file"]}
+        }}},
+        "responses": {"201": {"description": "File uploaded"}}
+      }
+    },
+    "/media/{filename}": {
+      "delete": {
+        "tags": ["Media"], "operationId": "deleteMedia", "summary": "Delete media file",
+        "security": [{"BearerAuth": []}],
+        "parameters": [{"name": "filename", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "responses": {"200": {"description": "File deleted"}}
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {"type": "http", "scheme": "bearer", "bearerFormat": "Sanctum"}
+    },
+    "schemas": {
+      "AlbumCreate": {
+        "type": "object", "required": ["title", "year", "platform"],
+        "properties": {
+          "title": {"type": "string"}, "year": {"type": "integer"},
+          "platform": {"type": "string", "enum": ["youtube", "soundcloud", "bandcamp", "spotify"]},
+          "media_url": {"type": "string", "format": "uri"}, "description": {"type": "string"},
+          "cover": {"type": "string", "format": "binary"}, "sort": {"type": "integer"}, "active": {"type": "boolean"}
+        }
+      },
+      "AlbumUpdate": {
+        "type": "object",
+        "properties": {
+          "title": {"type": "string"}, "year": {"type": "integer"},
+          "platform": {"type": "string", "enum": ["youtube", "soundcloud", "bandcamp", "spotify"]},
+          "media_url": {"type": "string", "format": "uri"}, "description": {"type": "string"},
+          "cover": {"type": "string", "format": "binary"}, "sort": {"type": "integer"}, "active": {"type": "boolean"}
+        }
+      },
+      "TrackCreate": {
+        "type": "object", "required": ["album_id", "title", "platform"],
+        "properties": {
+          "album_id": {"type": "integer"}, "title": {"type": "string"},
+          "platform": {"type": "string", "enum": ["youtube", "soundcloud", "bandcamp", "spotify"]},
+          "media_url": {"type": "string", "format": "uri"}, "duration": {"type": "string"},
+          "sort": {"type": "integer"}, "active": {"type": "boolean"}
+        }
+      },
+      "LinkCreate": {
+        "type": "object", "required": ["platform", "label", "url"],
+        "properties": {
+          "platform": {"type": "string"}, "label": {"type": "string"},
+          "url": {"type": "string", "format": "uri"},
+          "icon_svg": {"type": "string"}, "sort": {"type": "integer"}, "active": {"type": "boolean"}
+        }
+      },
+      "UpdateCreate": {
+        "type": "object", "required": ["body"],
+        "properties": {
+          "body": {"type": "string", "maxLength": 2000},
+          "visible": {"type": "boolean"},
+          "published_at": {"type": "string", "format": "date-time"}
+        }
+      }
+    }
+  }
+}

@@ -30,9 +30,12 @@
   <!-- Fonts preload -->
   <link rel="preconnect" href="{{ url('/fonts/montserrat-latin-700.woff2') }}">
   <link rel="preconnect" href="{{ url('/fonts/inter-latin-400.woff2') }}">
-  
+
   <!-- Vite assets -->
   @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+  <!-- JSON-LD Structured Data -->
+  @include('partials.json-ld')
 </head>
 <body>
   <!-- Stars Background Canvas -->
