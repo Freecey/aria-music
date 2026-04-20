@@ -10,6 +10,7 @@
   </div>
   <form method="POST" action="/admin/links" class="card">
     @csrf
+    <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">* Champs obligatoires</p>
     <div class="form-group">
       <label class="form-label" for="platform">Plateforme *</label>
       <input type="text" id="platform" name="platform" class="form-control" value="{{ old('platform') }}" placeholder="youtube, telegram, instagram..." required>
@@ -21,7 +22,8 @@
     </div>
     <div class="form-group">
       <label class="form-label" for="url">URL *</label>
-      <input type="url" id="url" name="url" class="form-control" value="{{ old('url') }}" placeholder="https://..." required>
+      <input type="text" id="url" name="url" class="form-control" value="{{ old('url') }}" placeholder="https://... ou mailto:..." required>
+      @error('url') <span class="form-error">{{ $message }}</span> @enderror
     </div>
     <div class="form-group">
       <label class="form-label" for="icon_svg">Icône SVG (optionnel)</label>

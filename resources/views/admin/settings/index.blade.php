@@ -41,14 +41,27 @@
 
     <div class="form-row">
       <div class="form-group">
-        <label class="form-label" for="avatar">Avatar</label>
+        <label class="form-label" for="avatar">Avatar (Hero)</label>
         <input type="file" id="avatar" name="avatar" class="form-control" accept="image/*">
+        <span class="form-hint">Affiché dans la section principale.</span>
         @if(!empty($settings['avatar_path']->value))
           <div style="margin-top:0.5rem;">
             <img src="{{ asset('storage/' . $settings['avatar_path']->value) }}" style="width:80px; height:80px; object-fit:cover; border-radius:50%; border:2px solid var(--color-violet);">
           </div>
         @endif
       </div>
+      <div class="form-group">
+        <label class="form-label" for="avatar2">Avatar 2 (À Propos)</label>
+        <input type="file" id="avatar2" name="avatar2" class="form-control" accept="image/*">
+        <span class="form-hint">Affiché dans la section À Propos. Si vide, Avatar 1 est utilisé.</span>
+        @if(!empty($settings['avatar2_path']->value))
+          <div style="margin-top:0.5rem;">
+            <img src="{{ asset('storage/' . $settings['avatar2_path']->value) }}" style="width:80px; height:80px; object-fit:cover; border-radius:50%; border:2px solid var(--color-violet);">
+          </div>
+        @endif
+      </div>
+    </div>
+    <div class="form-row">
       <div class="form-group">
         <label class="form-label" for="og_image">Image OG (1200×630)</label>
         <input type="file" id="og_image" name="og_image" class="form-control" accept="image/*">

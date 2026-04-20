@@ -180,6 +180,7 @@ body {
   justify-content: center;
   text-align: center;
   padding: var(--space-2xl);
+  padding-top: 7rem;
   position: relative;
 }
 

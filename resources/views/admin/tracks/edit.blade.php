@@ -11,6 +11,12 @@
 
   <form method="POST" action="/admin/tracks/{{ $track->id }}" class="card">
     @csrf @method('PUT')
+    @if($errors->any())
+    <div style="margin-bottom:1rem; padding:0.75rem; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:6px; font-size:0.875rem; color:#f87171;">
+      {{ $errors->first() }}
+    </div>
+    @endif
+    <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">* Champs obligatoires</p>
     <div class="form-group">
       <label class="form-label" for="album_id">Album *</label>
       <select id="album_id" name="album_id" class="form-control" required>
@@ -25,7 +31,7 @@
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label class="form-label" for="platform">Plateforme</label>
+        <label class="form-label" for="platform">Plateforme *</label>
         <select id="platform" name="platform" class="form-control" required>
           @foreach(['youtube','spotify','soundcloud','bandcamp'] as $p)
             <option value="{{ $p }}" {{ $track->platform == $p ? 'selected' : '' }}>{{ ucfirst($p) }}</option>

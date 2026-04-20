@@ -11,6 +11,7 @@
 
   <form method="POST" action="/admin/tracks" class="card">
     @csrf
+    <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">* Champs obligatoires</p>
     <div class="form-group">
       <label class="form-label" for="album_id">Album *</label>
       <select id="album_id" name="album_id" class="form-control" required>
