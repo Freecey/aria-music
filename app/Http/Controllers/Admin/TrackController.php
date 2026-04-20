@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Album;
 use App\Models\Track;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class TrackController extends Controller
 {
@@ -40,7 +39,7 @@ class TrackController extends Controller
             'sort'     => 'nullable|integer',
         ]);
 
-        $data['slug'] = Str::slug($data['title']);
+        $data['slug'] = Track::generateSlug($data['title'], $data['album_id']);
         $data['sort'] = $data['sort'] ?? Track::where('album_id', $data['album_id'])->max('sort') + 1;
         $data['active'] = $request->has('active');
 
@@ -70,7 +69,8 @@ class TrackController extends Controller
         ]);
 
         if (isset($data['title'])) {
-            $data['slug'] = Str::slug($data['title']);
+            $albumId = $data['album_id'] ?? $track->album_id;
+            $data['slug'] = Track::generateSlug($data['title'], $albumId, $track->id);
         }
         $data['active'] = $request->has('active');
 
