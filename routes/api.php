@@ -27,7 +27,7 @@ Route::prefix('v1')->group(function () {
     ));
 
     // Auth
-    Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
 });
 
 // Protected API routes (require Bearer token)

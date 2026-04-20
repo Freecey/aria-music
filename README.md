@@ -158,7 +158,7 @@ npm run dev
 # 9. Démarrer le serveur
 php artisan serve
 ```
-
+ 
 → **Admin:** http://localhost:8000/admin | `aria@aria-music.be` / `password`
 
 ### Production

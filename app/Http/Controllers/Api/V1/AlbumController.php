@@ -20,9 +20,10 @@ class AlbumController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $perPage = $request->integer('per_page', 20);
+        $perPage = min($request->integer('per_page', 20), 100);
+        $showAll = $request->boolean('all') && auth('sanctum')->check();
 
-        if ($request->boolean('all')) {
+        if ($showAll) {
             $albums = Album::with('tracks')
                 ->orderBy('sort')
                 ->get()
@@ -148,8 +149,9 @@ class AlbumController extends Controller
         }
 
         $album->update($data);
+        $album->load('tracks');
 
-        return response()->json(['data' => $album]);
+        return response()->json(['data' => $this->formatAlbum($album)]);
     }
 
     public function destroy(int $id): JsonResponse

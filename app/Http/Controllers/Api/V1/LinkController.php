@@ -13,7 +13,7 @@ class LinkController extends Controller
     {
         $query = SocialLink::query();
 
-        if (!$request->has('all')) {
+        if (!($request->has('all') && auth('sanctum')->check())) {
             $query->where('active', true);
         }
 
@@ -31,10 +31,14 @@ class LinkController extends Controller
             'platform' => 'required|string|max:50',
             'label' => 'required|string|max:100',
             'url'      => 'required|string|max:1000',
-            'icon_svg' => 'nullable|string',
+            'icon_svg' => 'nullable|string|max:5000',
             'sort'     => 'nullable|integer',
             'active'   => 'nullable|boolean',
         ]);
+
+        if (isset($data['icon_svg'])) {
+            $data['icon_svg'] = strip_tags($data['icon_svg'], '<svg><path><circle><rect><polygon><polyline><line><g><defs><use><symbol>');
+        }
 
         $data['sort'] = $data['sort'] ?? 0;
         $data['active'] = $data['active'] ?? true;
@@ -52,10 +56,14 @@ class LinkController extends Controller
             'platform' => 'sometimes|string|max:50',
             'label' => 'sometimes|string|max:100',
             'url'      => 'sometimes|string|max:1000',
-            'icon_svg' => 'nullable|string',
+            'icon_svg' => 'nullable|string|max:5000',
             'sort'     => 'nullable|integer',
             'active'   => 'nullable|boolean',
         ]);
+
+        if (isset($data['icon_svg'])) {
+            $data['icon_svg'] = strip_tags($data['icon_svg'], '<svg><path><circle><rect><polygon><polyline><line><g><defs><use><symbol>');
+        }
 
         $link->update($data);
 

@@ -14,6 +14,8 @@ L'API utilise **Laravel Sanctum** avec des tokens Bearer (stateless). Les routes
 
 ### Connexion
 
+> **Rate limit** : 10 tentatives par minute par IP. Au-delà → `429 Too Many Requests`.
+
 ```http
 POST /auth/login
 Content-Type: application/json
@@ -77,8 +79,8 @@ Liste les albums actifs avec leurs tracks.
 
 | Paramètre | Type | Description |
 |-----------|------|-------------|
-| `all`     | int  | `1` = inclure les albums inactifs |
-| `per_page`| int  | Nombre par page (défaut: 20) |
+| `all`     | int  | `1` = inclure les albums inactifs — **token Bearer requis** |
+| `per_page`| int  | Nombre par page (défaut: 20, max: 100) |
 
 ```http
 GET /albums?per_page=10
@@ -107,7 +109,7 @@ Liste les tracks actives.
 | Paramètre  | Description |
 |------------|-------------|
 | `album_id` | Filtrer par album |
-| `all`      | `1` = inclure les tracks inactives |
+| `all`      | `1` = inclure les tracks inactives — **token Bearer requis** |
 
 ---
 
@@ -116,7 +118,7 @@ Liste les liens sociaux actifs.
 
 | Paramètre | Description |
 |-----------|-------------|
-| `all`     | `1` = inclure les liens inactifs |
+| `all`     | `1` = inclure les liens inactifs — **token Bearer requis** |
 
 ---
 
@@ -125,8 +127,8 @@ Liste les actualités visibles, par date décroissante.
 
 | Paramètre  | Description |
 |------------|-------------|
-| `all`      | `1` = inclure les actualités cachées |
-| `per_page` | Nombre par page (défaut: 20) |
+| `all`      | `1` = inclure les actualités cachées — **token Bearer requis** |
+| `per_page` | Nombre par page (défaut: 20, max: 100) |
 
 ---
 
@@ -212,7 +214,7 @@ Content-Type: application/json
   "platform": "instagram",
   "label": "Instagram",
   "url": "https://instagram.com/aria",
-  "icon_svg": "<svg viewBox=\"0 0 24 24\">...</svg>",
+  "icon_svg": "<svg viewBox=\"0 0 24 24\">...</svg>",    ← tags SVG uniquement, scripts filtrés
   "sort": 5
 }
 ```
@@ -323,6 +325,7 @@ Authorization: Bearer <token>
 | `401` | Token manquant ou invalide |
 | `404` | Ressource introuvable |
 | `422` | Erreur de validation — body contient `errors: { champ: ["message"] }` |
+| `429` | Trop de requêtes (rate limit atteint) |
 
 ---
 
