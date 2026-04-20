@@ -52,7 +52,7 @@
       </table>
     </div>
     @if($tracks->hasPages())
-      <div class="pagination">{{ $tracks->links() }}</div>
+      {{ $tracks->links('admin.partials.pagination') }}
     @endif
   @endif
 </div>

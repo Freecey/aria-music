@@ -37,7 +37,7 @@
       </table>
     </div>
     @if($updates->hasPages())
-      <div class="pagination">{{ $updates->links() }}</div>
+      {{ $updates->links('admin.partials.pagination') }}
     @endif
   @endif
 </div>
