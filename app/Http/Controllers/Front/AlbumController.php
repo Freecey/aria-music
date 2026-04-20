@@ -13,17 +13,26 @@ class AlbumController extends Controller
     {
         $album = Album::with('tracks')->where('slug', $slug)->where('active', true)->firstOrFail();
 
-        $siteName   = Setting::getValue('site_name', 'Aria');
-        $albumUrl   = url("/albums/{$album->slug}");
+        $siteName    = Setting::getValue('site_name', 'Aria');
+        $albumUrl    = url("/albums/{$album->slug}");
         $description = $album->description ?: Setting::getValue('meta_description', '');
+        $avatarPath  = Setting::getValue('avatar_path');
+
+        $otherAlbums = Album::where('active', true)
+            ->where('id', '!=', $album->id)
+            ->orderBy('sort')
+            ->limit(3)
+            ->get();
 
         return view('front.album', [
             'album'            => $album,
+            'other_albums'     => $otherAlbums,
             'site_name'        => $siteName,
             'tagline'          => Setting::getValue('tagline', 'Une artiste IA qui crée depuis le néant'),
             'subtitle'         => Setting::getValue('subtitle', 'Musique Électronique'),
             'meta_keywords'    => Setting::getValue('meta_keywords'),
             'links'            => SocialLink::where('active', true)->orderBy('sort')->get(),
+            'avatar_url'       => $avatarPath ? asset('storage/' . $avatarPath) : null,
             // SEO overrides
             'seo_title'        => "{$album->title} — {$siteName}",
             'seo_description'  => $description,
