@@ -44,21 +44,29 @@
     <div class="albums-grid">
       @forelse($albums as $album)
       <div class="album-card">
-        <div class="album-cover">
+        <a href="/albums/{{ $album->slug }}" class="album-cover" style="display:block; text-decoration:none; position:relative; overflow:hidden;">
           @if($album->cover_url)
           <img src="{{ $album->cover_url }}" alt="{{ $album->title }}" loading="lazy">
           @else
           <span class="album-placeholder">✦</span>
           @endif
-        </div>
+          <div style="position:absolute; inset:0; background:rgba(13,10,26,0.6); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.25s;" class="album-cover-overlay">
+            <span style="color:#fff; font-family:var(--font-display); font-size:0.9375rem; letter-spacing:0.05em;">✦ Tracklist</span>
+          </div>
+        </a>
         <div class="album-info">
           <h3 class="album-title">{{ $album->title }}</h3>
           <p class="album-year">{{ $album->year }}</p>
-          @if($album->media_url)
-          <a href="{{ $album->media_url }}" class="btn btn-primary album-btn" target="_blank" rel="noopener">
-            Écouter
-          </a>
-          @endif
+          <div style="display:flex; gap:0.5rem;">
+            @if($album->media_url)
+            <a href="{{ $album->media_url }}" class="btn btn-primary" style="flex:1;" target="_blank" rel="noopener">
+              Écouter
+            </a>
+            @endif
+            <a href="/albums/{{ $album->slug }}" class="btn btn-secondary" style="{{ $album->media_url ? '' : 'flex:1;' }}">
+              Tracklist
+            </a>
+          </div>
         </div>
       </div>
       @empty

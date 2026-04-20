@@ -65,6 +65,12 @@ class AlbumController extends Controller
         return redirect('/admin/albums')->with('success', 'Album créé avec succès.');
     }
 
+    public function show(int $id)
+    {
+        $album = Album::with('tracks')->findOrFail($id);
+        return view('admin.albums.show', compact('album'));
+    }
+
     public function edit(int $id)
     {
         $album = Album::with('tracks')->findOrFail($id);
