@@ -20,7 +20,9 @@ Token has no expiry. Revoke with POST `/auth/logout`.
 | Social links | GET /links |
 | News updates | GET /updates |
 
-Query params: `?all=1` returns hidden items too. `?per_page=N` paginates albums/updates. `?album_id=N` filters tracks.
+Query params: `?all=1` returns hidden/inactive items too. `?per_page=N` paginates albums/updates. `?album_id=N` filters tracks.
+
+> GET routes are always public. Auth is only required for write operations (POST/PUT/DELETE/PATCH).
 
 ### Write (Bearer token required)
 
