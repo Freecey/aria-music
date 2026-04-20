@@ -11,15 +11,16 @@ class UpdateController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $perPage = $request->integer('per_page', 20);
+        $perPage = min($request->integer('per_page', 20), 100);
+        $showAll = $request->boolean('all') && auth('sanctum')->check();
 
         $query = Update::query();
 
-        if (!$request->boolean('all')) {
+        if (!$showAll) {
             $query->where('visible', true);
         }
 
-        if ($request->boolean('all')) {
+        if ($showAll) {
             $updates = $query->orderBy('published_at', 'desc')->get();
 
             return response()->json([

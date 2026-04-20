@@ -13,8 +13,9 @@ class TrackController extends Controller
     public function index(Request $request): JsonResponse
     {
         $query = Track::with('album')->orderBy('sort');
+        $showAll = $request->boolean('all') && auth('sanctum')->check();
 
-        if (!$request->boolean('all')) {
+        if (!$showAll) {
             $query->where('active', true);
         }
 

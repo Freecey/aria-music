@@ -20,9 +20,9 @@ Token has no expiry. Revoke with POST `/auth/logout`.
 | Social links | GET /links |
 | News updates | GET /updates |
 
-Query params: `?all=1` returns hidden/inactive items too. `?per_page=N` paginates albums/updates. `?album_id=N` filters tracks.
+Query params: `?all=1` returns hidden/inactive items too — **requires Bearer token**. `?per_page=N` paginates albums/updates (max 100). `?album_id=N` filters tracks.
 
-> GET routes are always public. Auth is only required for write operations (POST/PUT/DELETE/PATCH).
+> GET routes are public for active/visible content. `?all=1` requires a valid Bearer token.
 
 ### Write (Bearer token required)
 
@@ -36,7 +36,7 @@ Optional: `media_url`, `duration` (e.g. "3:42"), `sort`, `active`
 
 **Social Links** — `POST /links` (JSON), `PUT /links/{id}` (JSON), `DELETE /links/{id}`
 Required on create: `platform`, `label`, `url` (any scheme: https, mailto, tg, etc.)
-Optional: `icon_svg` (raw SVG string), `sort`, `active`
+Optional: `icon_svg` (SVG string, max 5000 chars — script tags stripped), `sort`, `active`
 
 **News Updates** — `POST /updates` (JSON), `PUT /updates/{id}` (JSON), `DELETE /updates/{id}`
 Required on create: `body` (max 2000 chars)
@@ -73,3 +73,4 @@ Optional: `visible` (bool, default true), `published_at` (ISO8601)
 - `401` — missing or invalid Bearer token
 - `404` — resource not found
 - `422` — validation error, body: `{ "message": "...", "errors": { "field": ["reason"] } }`
+- `429` — rate limit exceeded (login: 10 req/min per IP)

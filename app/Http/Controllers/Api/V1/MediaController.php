@@ -57,9 +57,13 @@ class MediaController extends Controller
 
     public function destroy(string $filename): JsonResponse
     {
-        // Decode filename (urlencoded)
         $decoded = urldecode($filename);
-        
+
+        // Block path traversal attempts
+        if (str_contains($decoded, '..') || str_starts_with($decoded, '/')) {
+            return response()->json(['error' => 'Invalid filename'], 422);
+        }
+
         if (Storage::disk('public')->exists($decoded)) {
             Storage::disk('public')->delete($decoded);
             return response()->json(['data' => ['message' => 'File deleted']]);
