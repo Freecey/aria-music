@@ -81,9 +81,19 @@
         <p style="color:var(--color-violet); font-size:0.8125rem; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">
           {{ $album->year }}
         </p>
-        <h1 style="font-family:var(--font-display); font-size:2rem; font-weight:700; line-height:1.2; margin-bottom:0.75rem;">
+        <h1 style="font-family:var(--font-display); font-size:2rem; font-weight:700; line-height:1.2; margin-bottom:1rem;">
           {{ $album->title }}
         </h1>
+
+        <!-- Artist credit -->
+        <a href="/" style="display:inline-flex; align-items:center; gap:0.625rem; text-decoration:none; margin-bottom:1.25rem;">
+          @if($avatar_url)
+            <img src="{{ $avatar_url }}" alt="{{ $site_name ?? 'Aria' }}"
+                 style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid rgba(139,92,246,0.4);">
+          @endif
+          <span style="font-size:0.875rem; color:var(--text-secondary);">{{ $site_name ?? 'Aria' }}</span>
+        </a>
+
         @if($album->description)
           <p style="color:var(--text-secondary); font-size:0.9375rem; line-height:1.7; margin-bottom:1.5rem;">
             {{ $album->description }}
@@ -121,6 +131,34 @@
             </a>
           @endif
         </div>
+        @endforeach
+      </div>
+    </div>
+    @endif
+
+    <!-- Other albums -->
+    @if($other_albums->isNotEmpty())
+    <div style="margin-top:4rem; padding-top:2.5rem; border-top:1px solid rgba(139,92,246,0.15);">
+      <h2 style="font-family:var(--font-display); font-size:1.25rem; color:var(--color-violet); margin-bottom:1.5rem;">
+        ✦ Autres albums
+      </h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:1rem;">
+        @foreach($other_albums as $other)
+        <a href="/albums/{{ $other->slug }}" style="text-decoration:none; display:block;">
+          <div class="album-card" style="cursor:pointer;">
+            <div class="album-cover">
+              @if($other->cover_url)
+                <img src="{{ $other->cover_url }}" alt="{{ $other->title }}" loading="lazy">
+              @else
+                <span class="album-placeholder">✦</span>
+              @endif
+            </div>
+            <div class="album-info" style="padding:0.75rem;">
+              <h3 class="album-title" style="font-size:0.9375rem;">{{ $other->title }}</h3>
+              <p class="album-year">{{ $other->year }}</p>
+            </div>
+          </div>
+        </a>
         @endforeach
       </div>
     </div>
