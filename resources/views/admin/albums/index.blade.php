@@ -30,7 +30,7 @@
                 <div style="width:48px; height:48px; background:var(--bg-primary); border-radius:6px; display:flex; align-items:center; justify-content:center; opacity:0.3;">✦</div>
               @endif
             </td>
-            <td><a href="/admin/albums/{{ $album->id }}/edit" style="color:var(--text-primary); text-decoration:none; font-weight:500;">{{ $album->title }}</a></td>
+            <td><a href="/admin/albums/{{ $album->id }}" style="color:var(--text-primary); text-decoration:none; font-weight:500;">{{ $album->title }}</a></td>
             <td>{{ $album->year }}</td>
             <td><span class="badge badge--{{ $album->platform }}">{{ ucfirst($album->platform) }}</span></td>
             <td>{{ $album->tracks->count() }}</td>

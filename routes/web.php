@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Front\HomeController;
+use App\Http\Controllers\Front\AlbumController as FrontAlbumController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AlbumController;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 
 // Front routes
 Route::get('/', [HomeController::class, 'index']);
+Route::get('/albums/{slug}', [FrontAlbumController::class, 'show'])->name('albums.show.front');
 
 // Health check
 Route::get('/up', fn () => response()->json(['status' => 'ok']));
@@ -48,6 +50,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/albums', [AlbumController::class, 'index'])->name('albums.index');
         Route::get('/albums/create', [AlbumController::class, 'create'])->name('albums.create');
         Route::post('/albums', [AlbumController::class, 'store'])->name('albums.store');
+        Route::get('/albums/{id}', [AlbumController::class, 'show'])->name('albums.show');
         Route::get('/albums/{id}/edit', [AlbumController::class, 'edit'])->name('albums.edit');
         Route::put('/albums/{id}', [AlbumController::class, 'update'])->name('albums.update');
         Route::delete('/albums/{id}', [AlbumController::class, 'destroy'])->name('albums.destroy');

@@ -393,6 +393,10 @@ body {
   object-fit: cover;
 }
 
+.album-cover:hover .album-cover-overlay {
+  opacity: 1 !important;
+}
+
 .album-placeholder {
   font-size: 3rem;
   opacity: 0.3;
