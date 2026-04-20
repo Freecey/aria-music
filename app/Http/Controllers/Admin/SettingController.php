@@ -4,10 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Services\MediaService;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
+    protected $media;
+
+    public function __construct(MediaService $media)
+    {
+        $this->media = $media;
+    }
+
     public function index()
     {
         $settings = Setting::all()->keyBy('key');
@@ -24,20 +32,20 @@ class SettingController extends Controller
             }
         }
 
-        // Handle avatar upload
+        // Avatar → WebP conversion
         if ($request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-            $filename = 'avatar-' . time() . '.webp';
-            $path = $file->storeAs('avatars', $filename, 'public');
-            Setting::setValue('avatar_path', $path);
+            $avatarPath = $this->media->processAndStoreImage($request, 'avatar', 'avatars', 'avatar');
+            if ($avatarPath) {
+                Setting::setValue('avatar_path', $avatarPath);
+            }
         }
 
-        // Handle OG image upload
+        // OG image → WebP conversion
         if ($request->hasFile('og_image')) {
-            $file = $request->file('og_image');
-            $filename = 'og-' . time() . '.webp';
-            $path = $file->storeAs('og', $filename, 'public');
-            Setting::setValue('og_image_path', $path);
+            $ogPath = $this->media->processAndStoreImage($request, 'og_image', 'og', 'og');
+            if ($ogPath) {
+                Setting::setValue('og_image_path', $ogPath);
+            }
         }
 
         return redirect('/admin/settings')->with('success', 'Paramètres sauvegardés.');

@@ -5,11 +5,19 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Album;
 use App\Models\Track;
+use App\Services\MediaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class AlbumController extends Controller
 {
+    protected $media;
+
+    public function __construct(MediaService $media)
+    {
+        $this->media = $media;
+    }
+
     public function index()
     {
         $albums = Album::with('tracks')->orderBy('sort')->get();
@@ -34,15 +42,23 @@ class AlbumController extends Controller
             'active' => 'nullable|boolean',
         ]);
 
-        $data['slug'] = Str::slug($data['title']);
+        $slug = Str::slug($data['title']);
+        $data['slug'] = $slug;
         $data['sort'] = $data['sort'] ?? Album::max('sort') + 1;
         $data['active'] = $request->has('active');
 
+        // Ensure slug uniqueness
+        $baseSlug = $data['slug'];
+        $counter = 1;
+        while (Album::where('slug', $data['slug'])->exists()) {
+            $data['slug'] = $baseSlug . '-' . $counter++;
+        }
+
+        // Process cover → WebP, resize, rename
         if ($request->hasFile('cover')) {
-            $file = $request->file('cover');
-            $filename = $data['slug'] . '-' . time() . '.webp';
-            $path = $file->storeAs('covers', $filename, 'public');
-            $data['cover_path'] = $path;
+            $data['cover_path'] = $this->media->processAndStoreImage(
+                $request, 'cover', 'covers', $slug
+            );
         }
 
         Album::create($data);
@@ -72,15 +88,27 @@ class AlbumController extends Controller
         ]);
 
         if (isset($data['title'])) {
-            $data['slug'] = Str::slug($data['title']);
+            $baseSlug = Str::slug($data['title']);
+            $data['slug'] = $baseSlug;
+
+            // Ensure slug uniqueness excluding current album
+            $counter = 1;
+            while (
+                Album::where('slug', $data['slug'])
+                    ->where('id', '!=', $id)
+                    ->exists()
+            ) {
+                $data['slug'] = $baseSlug . '-' . $counter++;
+            }
         }
         $data['active'] = $request->has('active');
 
+        // Process new cover → WebP, resize, rename
         if ($request->hasFile('cover')) {
-            $file = $request->file('cover');
-            $filename = ($data['slug'] ?? $album->slug) . '-' . time() . '.webp';
-            $path = $file->storeAs('covers', $filename, 'public');
-            $data['cover_path'] = $path;
+            $baseSlug = $data['slug'] ?? $album->slug;
+            $data['cover_path'] = $this->media->processAndStoreImage(
+                $request, 'cover', 'covers', $baseSlug
+            );
         }
 
         $album->update($data);

@@ -35,7 +35,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Auth
     Route::middleware('guest')->group(function () {
         Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-        Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+        Route::post('/login', [AuthController::class, 'login'])->name('login.submit')->middleware('throttle:5,1');
     });
 
     // Protected

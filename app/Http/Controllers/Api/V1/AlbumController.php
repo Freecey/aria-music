@@ -63,6 +63,13 @@ class AlbumController extends Controller
         $data['sort'] = $data['sort'] ?? 0;
         $data['active'] = $data['active'] ?? true;
 
+        // Ensure slug uniqueness
+        $baseSlug = $data['slug'];
+        $counter = 1;
+        while (Album::where('slug', $data['slug'])->exists()) {
+            $data['slug'] = $baseSlug . '-' . $counter++;
+        }
+
         // Handle cover upload
         if ($request->hasFile('cover')) {
             $file = $request->file('cover');
@@ -92,7 +99,18 @@ class AlbumController extends Controller
         ]);
 
         if (isset($data['title'])) {
-            $data['slug'] = Str::slug($data['title']);
+            $baseSlug = Str::slug($data['title']);
+            $data['slug'] = $baseSlug;
+
+            // Ensure slug uniqueness excluding current album
+            $counter = 1;
+            while (
+                Album::where('slug', $data['slug'])
+                    ->where('id', '!=', $id)
+                    ->exists()
+            ) {
+                $data['slug'] = $baseSlug . '-' . $counter++;
+            }
         }
 
         if ($request->hasFile('cover')) {
