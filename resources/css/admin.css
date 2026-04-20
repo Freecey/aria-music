@@ -228,6 +228,8 @@ textarea.form-control { resize: vertical; min-height: 100px; }
 .pagination a { color: var(--text-secondary); }
 .pagination a:hover { background: var(--bg-card); color: var(--text-primary); }
 .pagination span.current { background: rgba(139, 92, 246, 0.15); color: var(--color-violet); }
+.pagination span.disabled { color: var(--text-muted); opacity: 0.4; cursor: default; }
+.pagination span.dots { color: var(--text-muted); padding: 0.375rem 0.25rem; }
 
 /* ===== LOGIN ===== */
 .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg-primary); }
