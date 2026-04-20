@@ -3,6 +3,14 @@
 @section('content')
 <!-- HERO SECTION -->
 <section id="hero" class="hero">
+  <div class="hero-avatar-container">
+    @if(isset($avatar_url))
+    <div class="hero-avatar-glow"></div>
+    <img src="{{ $avatar_url }}" alt="{{ $site_name ?? 'Aria' }}" class="hero-avatar">
+    <div class="hero-avatar-ring"></div>
+    @endif
+  </div>
+  
   <h1 class="hero-logo">{{ $site_name ?? 'Aria' }}</h1>
   <p class="hero-subtitle">{{ $subtitle ?? 'Musique Électronique' }}</p>
   
