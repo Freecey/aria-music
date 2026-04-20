@@ -45,7 +45,7 @@ step "🔄 Git pull"
 git pull && ok "Repository à jour" || fail "git pull échoué"
 
 step "🎼 Composer install"
-php8.4 /usr/local/bin/composer install --no-interaction --prefer-dist \
+php8.4 /usr/local/bin/composer install --no-interaction --prefer-dist --optimize-autoloader \
   && ok "Dépendances PHP installées" || fail "composer install échoué"
 
 step "🗄️  Database migrations"
@@ -59,6 +59,22 @@ npm install \
 step "⚡ NPM build"
 npm run build \
   && ok "Assets compilés" || fail "npm run build échoué"
+
+step "🧹 Clear caches"
+php8.4 artisan cache:clear
+php8.4 artisan config:clear
+php8.4 artisan route:clear
+php8.4 artisan view:clear
+php8.4 artisan event:clear
+ok "Caches vidés"
+
+step "🔗 Storage link"
+php8.4 artisan storage:link 2>/dev/null && ok "Storage lié" || warn "Lien déjà existant (ignoré)"
+
+step "🗺️  Sitemap"
+php8.4 artisan sitemap:generate 2>/dev/null \
+  && ok "Sitemap généré" \
+  || warn "sitemap:generate indisponible — ignoré"
 
 step "🚀 Artisan optimise"
 php8.4 artisan optimize \
