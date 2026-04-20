@@ -89,9 +89,16 @@ resources/
 ├── css/                    ← app.css, admin.css, variables.css
 └── js/                     ← app.js, particles.js, typewriter.js
 
-database/
-├── migrations/             ← toutes les tables
-└── seeders/                ← données initiales + fixtures
+├── database/
+│   ├── migrations/             ← toutes les tables
+│   └── seeders/                ← données initiales + fixtures
+
+docs/
+├── CDC-v2.1-aria-music.md      ← Cahier des charges complet (source de vérité)
+├── api.md                      ← Documentation API REST
+├── api-agent.json              ← Spec API pour agents IA
+├── audit-code.md               ← Audit de conformité CDC + état d'avancement
+└── env.example                 ← Variables d'environnement (copy → .env)
 ```
 
 ---
