@@ -27,7 +27,6 @@ class LinkController extends Controller
             'url'      => 'required|string|max:1000',
             'icon_svg' => 'nullable|string',
             'sort'     => 'nullable|integer',
-            'active'   => 'nullable|boolean',
         ]);
 
         $data['sort'] = $data['sort'] ?? SocialLink::max('sort') + 1;
@@ -54,7 +53,6 @@ class LinkController extends Controller
             'url'      => 'sometimes|string|max:1000',
             'icon_svg' => 'nullable|string',
             'sort'     => 'nullable|integer',
-            'active'   => 'nullable|boolean',
         ]);
 
         $data['active'] = $request->has('active');

@@ -105,9 +105,9 @@ class AlbumController extends Controller
             );
         }
 
-        $album = Album::create($data);
+        $album = Album::with('tracks')->find(Album::create($data)->id);
 
-        return response()->json(['data' => $album], 201);
+        return response()->json(['data' => $this->formatAlbum($album)], 201);
     }
 
     public function update(Request $request, int $id): JsonResponse
