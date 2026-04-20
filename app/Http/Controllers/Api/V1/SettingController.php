@@ -9,6 +9,21 @@ use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
+    public function index(): JsonResponse
+    {
+        $keys = [
+            'site_name', 'tagline', 'subtitle', 'bio',
+            'avatar_path', 'meta_description', 'meta_keywords', 'og_image_path'
+        ];
+
+        $settings = [];
+        foreach ($keys as $key) {
+            $settings[$key] = Setting::getValue($key);
+        }
+
+        return response()->json(['data' => $settings]);
+    }
+
     public function patchBio(Request $request): JsonResponse
     {
         $data = $request->validate([

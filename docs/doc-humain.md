@@ -103,6 +103,15 @@ GET /albums?per_page=10
 
 ---
 
+### GET /albums/{id}
+Retourne un album actif avec ses tracks.
+
+```http
+GET /albums/1
+```
+
+---
+
 ### GET /tracks
 Liste les tracks actives.
 
@@ -110,6 +119,15 @@ Liste les tracks actives.
 |------------|-------------|
 | `album_id` | Filtrer par album |
 | `all`      | `1` = inclure les tracks inactives — **token Bearer requis** |
+
+---
+
+### GET /tracks/{id}
+Retourne une track active.
+
+```http
+GET /tracks/3
+```
 
 ---
 
@@ -122,6 +140,15 @@ Liste les liens sociaux actifs.
 
 ---
 
+### GET /links/{id}
+Retourne un lien social actif.
+
+```http
+GET /links/2
+```
+
+---
+
 ### GET /updates
 Liste les actualités visibles, par date décroissante.
 
@@ -129,6 +156,13 @@ Liste les actualités visibles, par date décroissante.
 |------------|-------------|
 | `all`      | `1` = inclure les actualités cachées — **token Bearer requis** |
 | `per_page` | Nombre par page (défaut: 20, max: 100) |
+
+### GET /updates/{id}
+Retourne une actualité visible.
+
+```http
+GET /updates/5
+```
 
 ---
 
@@ -253,6 +287,27 @@ DELETE /updates/{id}
 ---
 
 ### Paramètres du site
+
+#### Lire les paramètres
+```http
+GET /settings
+Authorization: Bearer <token>
+```
+
+```json
+{
+  "data": {
+    "site_name": "Aria",
+    "tagline": "...",
+    "subtitle": "...",
+    "bio": "...",
+    "avatar_path": "avatars/avatar-xxx.webp",
+    "meta_description": "...",
+    "meta_keywords": "...",
+    "og_image_path": "og/og-xxx.webp"
+  }
+}
+```
 
 #### Mise à jour partielle (un ou plusieurs champs)
 ```http

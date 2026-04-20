@@ -39,6 +39,13 @@ class TrackController extends Controller
         ]);
     }
 
+    public function show(int $id): JsonResponse
+    {
+        $track = Track::where('active', true)->findOrFail($id);
+
+        return response()->json(['data' => $track]);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([

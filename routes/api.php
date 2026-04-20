@@ -17,9 +17,13 @@ Route::prefix('v1')->group(function () {
     
     // Public resources
     Route::get('/albums', [AlbumController::class, 'index']);
+    Route::get('/albums/{id}', [AlbumController::class, 'show']);
     Route::get('/tracks', [TrackController::class, 'index']);
+    Route::get('/tracks/{id}', [TrackController::class, 'show']);
     Route::get('/links', [LinkController::class, 'index']);
+    Route::get('/links/{id}', [LinkController::class, 'show']);
     Route::get('/updates', [UpdateController::class, 'index']);
+    Route::get('/updates/{id}', [UpdateController::class, 'show']);
     
     // OpenAPI spec (public — for agents)
     Route::get('/docs', fn () => response()->json(
@@ -51,6 +55,7 @@ Route::prefix('v1')->middleware(['auth:sanctum', 'log.api'])->group(function () 
     Route::delete('/links/{id}', [LinkController::class, 'destroy']);
 
     // Settings/Bio
+    Route::get('/settings', [SettingController::class, 'index']);
     Route::patch('/bio', [SettingController::class, 'patchBio']);
     Route::patch('/settings', [SettingController::class, 'patchSettings']);
 

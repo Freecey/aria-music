@@ -42,6 +42,13 @@ class UpdateController extends Controller
         ]);
     }
 
+    public function show(int $id): JsonResponse
+    {
+        $update = Update::where('visible', true)->findOrFail($id);
+
+        return response()->json(['data' => $update]);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([

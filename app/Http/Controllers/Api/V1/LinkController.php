@@ -25,6 +25,13 @@ class LinkController extends Controller
         ]);
     }
 
+    public function show(int $id): JsonResponse
+    {
+        $link = SocialLink::where('active', true)->findOrFail($id);
+
+        return response()->json(['data' => $link]);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([
