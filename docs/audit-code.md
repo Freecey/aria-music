@@ -246,7 +246,7 @@ Vérifier que les fonts sont bien servies localement (dans `public/fonts/` aprè
 |-------|--------|
 | Commits poussés sur `dev` | ✅ `15c6e87`, `049c35e`, `c920fb2` |
 | Push `dev` vers GitHub | ✅ `c920fb2` |
-| Mail envoyé à Aria pour review | ⏳ En attente |
+| Mail envoyé à Aria pour review | ✅ Envoyé lun. 20 avr. 2026 |
 
 **Prochaine étape :** Déployer sur production après validation Aria.
 
