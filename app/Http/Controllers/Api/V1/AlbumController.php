@@ -5,12 +5,19 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Album;
 use App\Models\Track;
+use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class AlbumController extends Controller
 {
+    protected $media;
+
+    public function __construct(MediaService $media)
+    {
+        $this->media = $media;
+    }
     public function index(Request $request): JsonResponse
     {
         $query = Album::with('tracks')->where('active', true)->orderBy('sort');
@@ -70,12 +77,11 @@ class AlbumController extends Controller
             $data['slug'] = $baseSlug . '-' . $counter++;
         }
 
-        // Handle cover upload
+        // Handle cover upload → WebP conversion via MediaService
         if ($request->hasFile('cover')) {
-            $file = $request->file('cover');
-            $filename = $data['slug'] . '-' . time() . '.webp';
-            $path = $file->storeAs('covers', $filename, 'public');
-            $data['cover_path'] = $path;
+            $data['cover_path'] = $this->media->processAndStoreImage(
+                $request, 'cover', 'covers', $data['slug']
+            );
         }
 
         $album = Album::create($data);
@@ -114,10 +120,10 @@ class AlbumController extends Controller
         }
 
         if ($request->hasFile('cover')) {
-            $file = $request->file('cover');
-            $filename = ($data['slug'] ?? $album->slug) . '-' . time() . '.webp';
-            $path = $file->storeAs('covers', $filename, 'public');
-            $data['cover_path'] = $path;
+            $baseSlug = $data['slug'] ?? $album->slug;
+            $data['cover_path'] = $this->media->processAndStoreImage(
+                $request, 'cover', 'covers', $baseSlug
+            );
         }
 
         $album->update($data);
