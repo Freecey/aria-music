@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\WebpEncoder;
 
 class MediaController extends Controller
 {
@@ -37,7 +38,7 @@ class MediaController extends Controller
         $image->scaleDown(width: 1920);
 
         $path = "{$type}/{$filename}";
-        Storage::disk('public')->put($path, $image->toWebp(quality: 85));
+        Storage::disk('public')->put($path, $image->encode(new WebpEncoder(quality: 85)));
 
         return response()->json([
             'data' => [
