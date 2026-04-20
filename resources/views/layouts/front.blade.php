@@ -23,6 +23,12 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{{ $site_name ?? 'Aria' }}">
   <meta name="twitter:description" content="{{ $meta_description ?? '' }}">
+  @if(isset($og_image_url))
+  <meta name="twitter:image" content="{{ $og_image_url }}">
+  @endif
+
+  <!-- Canonical -->
+  <link rel="canonical" href="{{ url()->current() }}">
   
   <!-- Favicon -->
   <link rel="icon" href="/favicon.ico">

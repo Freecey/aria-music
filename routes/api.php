@@ -21,6 +21,11 @@ Route::prefix('v1')->group(function () {
     Route::get('/links', [LinkController::class, 'index']);
     Route::get('/updates', [UpdateController::class, 'index']);
     
+    // OpenAPI spec (public — for agents)
+    Route::get('/docs', fn () => response()->json(
+        json_decode(file_get_contents(base_path('docs/api-agent.json')), true)
+    ));
+
     // Auth
     Route::post('/auth/login', [AuthController::class, 'login']);
 });

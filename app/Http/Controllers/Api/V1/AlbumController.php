@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Album;
-use App\Models\Track;
 use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,39 +17,61 @@ class AlbumController extends Controller
     {
         $this->media = $media;
     }
+
     public function index(Request $request): JsonResponse
     {
-        $query = Album::with('tracks')->where('active', true)->orderBy('sort');
+        $perPage = $request->integer('per_page', 20);
 
-        if ($request->has('all')) {
-            $query = Album::with('tracks')->orderBy('sort');
+        if ($request->boolean('all')) {
+            $albums = Album::with('tracks')
+                ->orderBy('sort')
+                ->get()
+                ->map(fn($album) => $this->formatAlbum($album));
+
+            return response()->json([
+                'data' => $albums,
+                'meta' => ['total' => $albums->count()]
+            ]);
         }
 
-        $albums = $query->get()->map(function ($album) {
-            return [
-                'id' => $album->id,
-                'title' => $album->title,
-                'slug' => $album->slug,
-                'cover_url' => $album->cover_url,
-                'year' => $album->year,
-                'platform' => $album->platform,
-                'media_url' => $album->media_url,
-                'description' => $album->description,
-                'tracks' => $album->tracks->map(fn($t) => [
-                    'id' => $t->id,
-                    'title' => $t->title,
-                    'slug' => $t->slug,
-                    'platform' => $t->platform,
-                    'media_url' => $t->media_url,
-                    'duration' => $t->duration,
-                ]),
-            ];
-        });
+        $paginator = Album::with('tracks')
+            ->where('active', true)
+            ->orderBy('sort')
+            ->paginate($perPage);
+
+        $albums = $paginator->getCollection()->map(fn($album) => $this->formatAlbum($album));
 
         return response()->json([
             'data' => $albums,
-            'meta' => ['total' => $albums->count()]
+            'meta' => [
+                'total' => $paginator->total(),
+                'page' => $paginator->currentPage(),
+                'per_page' => $paginator->perPage(),
+                'last_page' => $paginator->lastPage(),
+            ]
         ]);
+    }
+
+    private function formatAlbum($album): array
+    {
+        return [
+            'id' => $album->id,
+            'title' => $album->title,
+            'slug' => $album->slug,
+            'cover_url' => $album->cover_url,
+            'year' => $album->year,
+            'platform' => $album->platform,
+            'media_url' => $album->media_url,
+            'description' => $album->description,
+            'tracks' => $album->tracks->map(fn($t) => [
+                'id' => $t->id,
+                'title' => $t->title,
+                'slug' => $t->slug,
+                'platform' => $t->platform,
+                'media_url' => $t->media_url,
+                'duration' => $t->duration,
+            ]),
+        ];
     }
 
     public function store(Request $request): JsonResponse

@@ -11,17 +11,33 @@ class UpdateController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
+        $perPage = $request->integer('per_page', 20);
+
         $query = Update::query();
 
-        if (!$request->has('all')) {
+        if (!$request->boolean('all')) {
             $query->where('visible', true);
         }
 
-        $updates = $query->orderBy('published_at', 'desc')->get();
+        if ($request->boolean('all')) {
+            $updates = $query->orderBy('published_at', 'desc')->get();
+
+            return response()->json([
+                'data' => $updates,
+                'meta' => ['total' => $updates->count()]
+            ]);
+        }
+
+        $paginator = $query->orderBy('published_at', 'desc')->paginate($perPage);
 
         return response()->json([
-            'data' => $updates,
-            'meta' => ['total' => $updates->count()]
+            'data' => $paginator->items(),
+            'meta' => [
+                'total' => $paginator->total(),
+                'page' => $paginator->currentPage(),
+                'per_page' => $paginator->perPage(),
+                'last_page' => $paginator->lastPage(),
+            ]
         ]);
     }
 
