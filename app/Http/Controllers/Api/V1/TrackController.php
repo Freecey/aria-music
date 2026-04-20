@@ -12,14 +12,14 @@ class TrackController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = Track::with('album')->where('active', true)->orderBy('sort');
+        $query = Track::with('album')->orderBy('sort');
+
+        if (!$request->boolean('all')) {
+            $query->where('active', true);
+        }
 
         if ($request->has('album_id')) {
             $query->where('album_id', $request->album_id);
-        }
-
-        if ($request->has('all')) {
-            $query = Track::with('album')->orderBy('sort');
         }
 
         $tracks = $query->get()->map(fn($t) => [

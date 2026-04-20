@@ -10,6 +10,11 @@
   </div>
   <form method="POST" action="/admin/links/{{ $link->id }}" class="card">
     @csrf @method('PUT')
+    @if($errors->any())
+    <div class="alert alert-error" style="margin-bottom:1rem; padding:0.75rem; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:6px; font-size:0.875rem; color:#f87171;">
+      {{ $errors->first() }}
+    </div>
+    @endif
     <div class="form-group">
       <label class="form-label" for="platform">Plateforme</label>
       <input type="text" id="platform" name="platform" class="form-control" value="{{ old('platform', $link->platform) }}">
@@ -20,7 +25,8 @@
     </div>
     <div class="form-group">
       <label class="form-label" for="url">URL</label>
-      <input type="url" id="url" name="url" class="form-control" value="{{ old('url', $link->url) }}">
+      <input type="text" id="url" name="url" class="form-control" value="{{ old('url', $link->url) }}" placeholder="https://... ou mailto:...">
+      @error('url') <span class="form-error">{{ $message }}</span> @enderror
     </div>
     <div class="form-group">
       <label class="form-label" for="icon_svg">Icône SVG</label>

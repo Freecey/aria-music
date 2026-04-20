@@ -10,6 +10,7 @@
   </div>
   <form method="POST" action="/admin/updates" class="card">
     @csrf
+    <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">* Champs obligatoires</p>
     <div class="form-group">
       <label class="form-label" for="body">Contenu *</label>
       <textarea id="body" name="body" class="form-control" rows="4" placeholder="✨ Nouveau projet en cours..." required>{{ old('body') }}</textarea>

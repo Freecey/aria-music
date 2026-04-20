@@ -22,8 +22,7 @@ class UpdateController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'body' => 'required|string|max:2000',
-            'visible' => 'nullable|boolean',
+            'body'         => 'required|string|max:2000',
             'published_at' => 'nullable|date',
         ]);
 
@@ -46,8 +45,7 @@ class UpdateController extends Controller
         $update = Update::findOrFail($id);
 
         $data = $request->validate([
-            'body' => 'sometimes|string|max:2000',
-            'visible' => 'nullable|boolean',
+            'body'         => 'sometimes|string|max:2000',
             'published_at' => 'nullable|date',
         ]);
 

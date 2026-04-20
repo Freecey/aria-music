@@ -12,6 +12,12 @@
   <div style="display:grid; grid-template-columns: 1fr 280px; gap:1.5rem;">
     <form method="POST" action="/admin/albums/{{ $album->id }}" enctype="multipart/form-data" class="card">
       @csrf @method('PUT')
+      @if($errors->any())
+      <div style="margin-bottom:1rem; padding:0.75rem; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:6px; font-size:0.875rem; color:#f87171;">
+        {{ $errors->first() }}
+      </div>
+      @endif
+      <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">* Champs obligatoires</p>
 
       <div class="form-group">
         <label class="form-label" for="title">Titre *</label>

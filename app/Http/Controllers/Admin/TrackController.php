@@ -37,8 +37,7 @@ class TrackController extends Controller
             'platform' => 'required|in:youtube,soundcloud,bandcamp,spotify',
             'media_url' => 'nullable|url',
             'duration' => 'nullable|string|max:20',
-            'sort' => 'nullable|integer',
-            'active' => 'nullable|boolean',
+            'sort'     => 'nullable|integer',
         ]);
 
         $data['slug'] = Str::slug($data['title']);
@@ -67,8 +66,7 @@ class TrackController extends Controller
             'platform' => 'sometimes|in:youtube,soundcloud,bandcamp,spotify',
             'media_url' => 'nullable|url',
             'duration' => 'nullable|string|max:20',
-            'sort' => 'nullable|integer',
-            'active' => 'nullable|boolean',
+            'sort'     => 'nullable|integer',
         ]);
 
         if (isset($data['title'])) {

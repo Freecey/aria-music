@@ -10,6 +10,11 @@
   </div>
   <form method="POST" action="/admin/updates/{{ $update->id }}" class="card">
     @csrf @method('PUT')
+    @if($errors->any())
+    <div style="margin-bottom:1rem; padding:0.75rem; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:6px; font-size:0.875rem; color:#f87171;">
+      {{ $errors->first() }}
+    </div>
+    @endif
     <div class="form-group">
       <label class="form-label" for="body">Contenu *</label>
       <textarea id="body" name="body" class="form-control" rows="4" required>{{ old('body', $update->body) }}</textarea>

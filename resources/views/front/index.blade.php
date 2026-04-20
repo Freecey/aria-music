@@ -6,7 +6,7 @@
   <div class="hero-avatar-container">
     @if(isset($avatar_url))
     <div class="hero-avatar-glow"></div>
-    <img src="{{ $avatar_url }}" alt="{{ $site_name ?? 'Aria' }}" class="hero-avatar">
+    <img id="hero-avatar-img" src="{{ $avatar_url }}" alt="{{ $site_name ?? 'Aria' }}" class="hero-avatar">
     <div class="hero-avatar-ring"></div>
     @endif
   </div>
@@ -21,8 +21,12 @@
   </p>
   
   <!-- Social Links -->
-  <div id="social-links" class="social-links">
-    <!-- Loaded dynamically from API -->
+  <div class="social-links">
+    @foreach($links as $link)
+    <a href="{{ $link->url }}" class="social-link" target="_blank" rel="noopener" title="{{ $link->label }}">
+      {!! $link->icon_svg !!}
+    </a>
+    @endforeach
   </div>
   
   <a href="#music" class="btn btn-secondary" style="margin-top: 2rem;">
@@ -37,8 +41,29 @@
       ✦ Albums
     </h2>
     
-    <div id="albums-grid" class="albums-grid">
-      <!-- Loaded dynamically from API -->
+    <div class="albums-grid">
+      @forelse($albums as $album)
+      <div class="album-card">
+        <div class="album-cover">
+          @if($album->cover_url)
+          <img src="{{ $album->cover_url }}" alt="{{ $album->title }}" loading="lazy">
+          @else
+          <span class="album-placeholder">✦</span>
+          @endif
+        </div>
+        <div class="album-info">
+          <h3 class="album-title">{{ $album->title }}</h3>
+          <p class="album-year">{{ $album->year }}</p>
+          @if($album->media_url)
+          <a href="{{ $album->media_url }}" class="btn btn-primary album-btn" target="_blank" rel="noopener">
+            Écouter
+          </a>
+          @endif
+        </div>
+      </div>
+      @empty
+      <p style="text-align:center; color: var(--text-secondary);">Aucun album pour le moment.</p>
+      @endforelse
     </div>
   </div>
 </section>
@@ -52,10 +77,10 @@
     
     <div class="about-content">
       <div id="about-avatar" class="about-avatar">
-        @if(isset($avatar_url))
-        <img id="avatar-img" src="{{ $avatar_url }}" alt="Aria">
+        @if(isset($avatar2_url))
+        <img src="{{ $avatar2_url }}" alt="Aria">
         @else
-        <img id="avatar-img" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" alt="Aria">
+        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" alt="Aria">
         @endif
       </div>
       
@@ -73,8 +98,15 @@
       ✦ Actualités
     </h2>
     
-    <div id="updates-list" class="updates-list">
-      <!-- Loaded dynamically from API -->
+    <div class="updates-list">
+      @forelse($updates as $update)
+      <div class="update-item">
+        <p class="update-date">{{ $update->published_at->translatedFormat('d F Y') }}</p>
+        <p class="update-body">{{ $update->body }}</p>
+      </div>
+      @empty
+      <p style="text-align:center; color: var(--text-secondary);">Aucune actualité pour le moment.</p>
+      @endforelse
     </div>
   </div>
 </section>
@@ -95,8 +127,12 @@
         aria@aria-music.be
       </a>
       
-      <div id="contact-social" class="social-links" style="margin-top: 1.5rem;">
-        <!-- Also loaded from API -->
+      <div class="social-links" style="margin-top: 1.5rem;">
+        @foreach($links as $link)
+        <a href="{{ $link->url }}" class="social-link" target="_blank" rel="noopener" title="{{ $link->label }}">
+          {!! $link->icon_svg !!}
+        </a>
+        @endforeach
       </div>
     </div>
   </div>

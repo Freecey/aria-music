@@ -11,6 +11,7 @@
 
   <form method="POST" action="/admin/albums" enctype="multipart/form-data" class="card">
     @csrf
+    <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">* Champs obligatoires</p>
 
     <div class="form-group">
       <label class="form-label" for="title">Titre *</label>

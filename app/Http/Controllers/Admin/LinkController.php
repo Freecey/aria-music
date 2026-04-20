@@ -23,11 +23,10 @@ class LinkController extends Controller
     {
         $data = $request->validate([
             'platform' => 'required|string|max:50',
-            'label' => 'required|string|max:100',
-            'url' => 'required|url',
+            'label'    => 'required|string|max:100',
+            'url'      => 'required|string|max:1000',
             'icon_svg' => 'nullable|string',
-            'sort' => 'nullable|integer',
-            'active' => 'nullable|boolean',
+            'sort'     => 'nullable|integer',
         ]);
 
         $data['sort'] = $data['sort'] ?? SocialLink::max('sort') + 1;
@@ -50,11 +49,10 @@ class LinkController extends Controller
 
         $data = $request->validate([
             'platform' => 'sometimes|string|max:50',
-            'label' => 'sometimes|string|max:100',
-            'url' => 'sometimes|url',
+            'label'    => 'sometimes|string|max:100',
+            'url'      => 'sometimes|string|max:1000',
             'icon_svg' => 'nullable|string',
-            'sort' => 'nullable|integer',
-            'active' => 'nullable|boolean',
+            'sort'     => 'nullable|integer',
         ]);
 
         $data['active'] = $request->has('active');

@@ -10,6 +10,7 @@
   </div>
   <form method="POST" action="/admin/users" class="card">
     @csrf
+    <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">* Champs obligatoires</p>
     <div class="form-group">
       <label class="form-label" for="name">Nom *</label>
       <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" required>

@@ -38,8 +38,7 @@ class AlbumController extends Controller
             'media_url' => 'nullable|url',
             'description' => 'nullable|string',
             'cover' => 'nullable|image|max:4096',
-            'sort' => 'nullable|integer',
-            'active' => 'nullable|boolean',
+            'sort'  => 'nullable|integer',
         ]);
 
         $slug = Str::slug($data['title']);
@@ -83,8 +82,7 @@ class AlbumController extends Controller
             'media_url' => 'nullable|url',
             'description' => 'nullable|string',
             'cover' => 'nullable|image|max:4096',
-            'sort' => 'nullable|integer',
-            'active' => 'nullable|boolean',
+            'sort'  => 'nullable|integer',
         ]);
 
         if (isset($data['title'])) {

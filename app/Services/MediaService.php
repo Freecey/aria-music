@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\WebpEncoder;
 
 class MediaService
 {
@@ -44,16 +45,14 @@ class MediaService
         $filename = $slug . '-' . time() . '.webp';
 
         // Process: resize if > 1920px, convert to WebP
-        $image = $this->manager->read($file->getPathname());
+        $image = $this->manager->decode($file->getPathname());
 
         if ($image->width() > 1920) {
-            $image->resize(1920, null, function ($constraint) {
-                $constraint->aspectRatio();
-            });
+            $image->scaleDown(width: 1920);
         }
 
         $path = "{$folder}/{$filename}";
-        Storage::disk('public')->put($path, $image->toWebp(85));
+        Storage::disk('public')->put($path, $image->encode(new WebpEncoder(quality: 85)));
 
         return $path;
     }
