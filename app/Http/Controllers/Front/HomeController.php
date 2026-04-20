@@ -17,12 +17,10 @@ class HomeController extends Controller
         $meta_description = Setting::getValue('meta_description');
         $meta_keywords = Setting::getValue('meta_keywords');
         $og_image_path = Setting::getValue('og_image_path');
-        
-        $avatar_url = null;
-        if ($og_image_path) {
-            $avatar_url = asset('storage/' . $og_image_path);
-        }
-        
+        $avatar_path = Setting::getValue('avatar_path');
+
+        $avatar_url = $avatar_path ? asset('storage/' . $avatar_path) : null;
+
         $data = [
             'site_name' => $site_name,
             'tagline' => $tagline,
