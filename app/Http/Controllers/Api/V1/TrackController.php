@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Track;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class TrackController extends Controller
 {
@@ -58,7 +57,7 @@ class TrackController extends Controller
             'active' => 'nullable|boolean',
         ]);
 
-        $data['slug'] = Str::slug($data['title']);
+        $data['slug'] = Track::generateSlug($data['title'], $data['album_id']);
         $data['sort'] = $data['sort'] ?? 0;
         $data['active'] = $data['active'] ?? true;
 
@@ -82,7 +81,8 @@ class TrackController extends Controller
         ]);
 
         if (isset($data['title'])) {
-            $data['slug'] = Str::slug($data['title']);
+            $albumId = $data['album_id'] ?? $track->album_id;
+            $data['slug'] = Track::generateSlug($data['title'], $albumId, $track->id);
         }
 
         $track->update($data);
