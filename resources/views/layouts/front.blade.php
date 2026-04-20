@@ -36,7 +36,7 @@
   <link rel="canonical" href="{{ url('/') }}">
 
   <!-- Favicon -->
-  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" href="/favicon.png">
 
   <!-- Fonts preload -->
   <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-latin-700.woff2" crossorigin>
