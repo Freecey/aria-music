@@ -75,6 +75,13 @@ class AlbumController extends Controller
         ];
     }
 
+    public function show(int $id): JsonResponse
+    {
+        $album = Album::with('tracks')->where('active', true)->findOrFail($id);
+
+        return response()->json(['data' => $this->formatAlbum($album)]);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([

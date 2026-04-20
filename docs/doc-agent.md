@@ -16,9 +16,13 @@ Token has no expiry. Revoke with POST `/auth/logout`.
 |------|----------|
 | Site settings + bio + avatar_url | GET /site |
 | Albums list (with tracks) | GET /albums |
+| Single album (with tracks) | GET /albums/{id} |
 | Tracks list | GET /tracks |
+| Single track | GET /tracks/{id} |
 | Social links | GET /links |
+| Single link | GET /links/{id} |
 | News updates | GET /updates |
+| Single update | GET /updates/{id} |
 
 Query params: `?all=1` returns hidden/inactive items too — **requires Bearer token**. `?per_page=N` paginates albums/updates (max 100). `?album_id=N` filters tracks.
 
@@ -42,7 +46,8 @@ Optional: `icon_svg` (SVG string, max 5000 chars — script tags stripped), `sor
 Required on create: `body` (max 2000 chars)
 Optional: `visible` (bool, default true), `published_at` (ISO8601)
 
-**Site Settings** — `PATCH /settings` (JSON) — partial update any combination of:
+**Site Settings** — `GET /settings` → returns all settings fields
+`PATCH /settings` (JSON) — partial update any combination of:
 `site_name`, `tagline`, `subtitle`, `bio`, `avatar_path`, `meta_description`, `meta_keywords`, `og_image_path`
 
 **Bio only shortcut** — `PATCH /bio` (JSON) — body: `{ "value": "..." }`
