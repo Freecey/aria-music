@@ -103,11 +103,12 @@ GET /albums?per_page=10
 
 ---
 
-### GET /albums/{id}
-Retourne un album actif avec ses tracks.
+### GET /albums/{id} ou GET /albums/{slug}
+Retourne un album actif avec ses tracks. Accepte un ID numérique ou un slug.
 
 ```http
 GET /albums/1
+GET /albums/vague
 ```
 
 ---

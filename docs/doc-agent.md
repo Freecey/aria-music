@@ -16,7 +16,7 @@ Token has no expiry. Revoke with POST `/auth/logout`.
 |------|----------|
 | Site settings + bio + avatar_url | GET /site |
 | Albums list (with tracks) | GET /albums |
-| Single album (with tracks) | GET /albums/{id} |
+| Single album (with tracks) | GET /albums/{id} or GET /albums/{slug} |
 | Tracks list | GET /tracks |
 | Single track | GET /tracks/{id} |
 | Social links | GET /links |
