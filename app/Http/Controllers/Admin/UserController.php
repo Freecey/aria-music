@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-
 class UserController extends Controller
 {
     public function index()
@@ -29,7 +27,6 @@ class UserController extends Controller
             'role' => 'required|in:admin,editor',
         ]);
 
-        $data['password'] = Hash::make($data['password']);
         User::create($data);
 
         return redirect('/admin/users')->with('success', 'Utilisateur créé.');
@@ -52,9 +49,7 @@ class UserController extends Controller
             'role' => 'sometimes|in:admin,editor',
         ]);
 
-        if (isset($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
-        } else {
+        if (!isset($data['password'])) {
             unset($data['password']);
         }
 
